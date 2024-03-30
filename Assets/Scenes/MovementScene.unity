@@ -165,11 +165,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 633237675}
-  - component: {fileID: 633237674}
+  - component: {fileID: 633237678}
   - component: {fileID: 633237671}
   - component: {fileID: 633237676}
   - component: {fileID: 633237677}
-  - component: {fileID: 633237678}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -204,14 +203,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!33 &633237674
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 633237670}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &633237675
 Transform:
   m_ObjectHideFlags: 0
@@ -257,7 +248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73a1e05db5aef624ba5823159fce5826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brakeMultiplier: 0.25
+  brakeMultiplier: 0.75
 --- !u!136 &633237678
 CapsuleCollider:
   m_ObjectHideFlags: 0
