@@ -5,7 +5,7 @@ using UnityEngine;
 public class CharacterAnimatorView : MonoBehaviour
 {
     [SerializeField] private Animator animator;
-    [SerializeField] private Rigidbody rigidbody;
+    [SerializeField] private new Rigidbody rigidbody;
     [SerializeField] private string speedParameter = "hor_speed";
 
     private void Update()
