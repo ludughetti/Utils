@@ -169,6 +169,7 @@ GameObject:
   - component: {fileID: 633237671}
   - component: {fileID: 633237676}
   - component: {fileID: 633237677}
+  - component: {fileID: 633237679}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -216,7 +217,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 770228947}
   - {fileID: 298137664}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -272,6 +272,20 @@ CapsuleCollider:
   m_Height: 1.7
   m_Direction: 1
   m_Center: {x: 0, y: 0.85, z: 0}
+--- !u!114 &633237679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633237670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab577ee052ff1a74582ddfb855b12d87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidbody: {fileID: 633237671}
+  rotationSpeed: 1
 --- !u!1 &671874241
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,6 +404,7 @@ GameObject:
   - component: {fileID: 770228946}
   - component: {fileID: 770228945}
   - component: {fileID: 770228948}
+  - component: {fileID: 770228949}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -465,11 +480,11 @@ Transform:
   m_GameObject: {fileID: 770228944}
   serializedVersion: 2
   m_LocalRotation: {x: 0.29943258, y: -0, z: -0, w: 0.9541175}
-  m_LocalPosition: {x: 0, y: 3.2, z: -2.3}
+  m_LocalPosition: {x: 0, y: 4.2, z: -2.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 633237675}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 34.847, y: 0, z: 0}
 --- !u!114 &770228948
 MonoBehaviour:
@@ -515,6 +530,21 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &770228949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770228944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c344111244c8c00468b4b6e4db60ea7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 633237675}
+  cameraOffset: {x: 0, y: 3.5, z: -5}
+  speedMultiplier: 10
 --- !u!1001 &853501099
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -855,6 +885,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1278973923}
+  - {fileID: 770228947}
   - {fileID: 633237675}
   - {fileID: 1319565884}
   - {fileID: 671874245}

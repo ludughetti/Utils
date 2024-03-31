@@ -15,7 +15,5 @@ public class CharacterAnimatorView : MonoBehaviour
 
         var speed = velocity.magnitude;
         animator.SetFloat(speedParameter, speed);
-
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(velocity), speed);
     }
 }

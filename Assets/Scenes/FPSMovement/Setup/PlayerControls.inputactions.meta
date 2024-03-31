@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: fdfd2998255fb82469c8798ab7e7cbff
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 8404be70184654265930450def6a9037, type: 3}
+  generateWrapperCode: 1
+  wrapperCodePath: Assets/Scenes/FPSMovement/Scripts/PlayerControls.cs
+  wrapperClassName: 
+  wrapperCodeNamespace: 
