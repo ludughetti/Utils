@@ -1,15 +1,15 @@
-using System;
 using UnityEngine;
 
 /* This class controls a body */
 public class CharacterBrain : MonoBehaviour
 {
     [SerializeField] private CharacterBody body;
+    [SerializeField] private new CameraControl camera;
     [SerializeField] private InputReader inputReader;
     [SerializeField] private float speed = 10;
     [SerializeField] private float acceleration = 4;
 
-    Vector3 _desiredDirection;
+    private Vector3 _desiredDirection = Vector3.zero;
 
     private void OnEnable()
     {
@@ -20,12 +20,15 @@ public class CharacterBrain : MonoBehaviour
             enabled = false;
             return;
         }
-        inputReader.onMovementInput += HandleMovementInput;
+
+        inputReader.OnMovementInput += HandleMovementInput;
+        inputReader.OnCameraInput += HandleCameraInput;
     }
 
     private void OnDisable()
     {
-        inputReader.onMovementInput -= HandleMovementInput;
+        inputReader.OnMovementInput -= HandleMovementInput;
+        inputReader.OnCameraInput -= HandleCameraInput;
     }
 
     private void HandleMovementInput(Vector2 input)
@@ -38,5 +41,11 @@ public class CharacterBrain : MonoBehaviour
 
         _desiredDirection = new Vector3(input.x, 0f, input.y);
         body.SetMovement(new MovementRequest(_desiredDirection, speed, acceleration));
+    }
+
+    private void HandleCameraInput(Vector2 input)
+    {
+        body.SetXRotation(input.x);
+        camera.SetRotation(input);
     }
 }
