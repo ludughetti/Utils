@@ -10,15 +10,16 @@ public class CharacterBody : MonoBehaviour
     private Rigidbody _rigidbody;
     private MovementRequest _currentMovement = MovementRequest.InvalidRequest;
     private bool _isBrakeRequested = false;
-    private float _xRotation = 0f;
+    private float _horizontalRotation = 0f;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
+        RotateCharacter();
         MoveCharacter();
     }
 
@@ -37,9 +38,9 @@ public class CharacterBody : MonoBehaviour
         _currentMovement = movementRequest;
     }
 
-    public void SetXRotation(float inputRotation)
+    public void SetHorizontalRotation(float inputRotation)
     {
-        _xRotation = inputRotation;
+        _horizontalRotation = inputRotation;
     }
 
     public void RequestBrake()
@@ -62,5 +63,10 @@ public class CharacterBody : MonoBehaviour
         /* Multiply input.x by transform.right to move on x axis and input.y by transform.forward to move on z axis */
         Vector3 directionVector = (_currentMovement.Direction.x * transform.right + _currentMovement.Direction.z * transform.forward) * _currentMovement.Acceleration;
         _rigidbody.AddForce(directionVector, ForceMode.Force);
+    }
+
+    private void RotateCharacter()
+    {
+        transform.Rotate(Vector3.up, _horizontalRotation * Time.deltaTime);
     }
 }
