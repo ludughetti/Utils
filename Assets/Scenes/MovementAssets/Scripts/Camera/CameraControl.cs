@@ -3,12 +3,12 @@ using UnityEngine;
 public class CameraControl : MonoBehaviour
 {
     [SerializeField] private Vector3 cameraOffset = new(0, 3.5f, -5f);
-    [SerializeField] private float cameraInitialRotation = 15f;
     [SerializeField] private float cameraHorizontalSensitivity = 10f;
     [SerializeField] private float cameraVerticalSensitivity = 10f;
-    [SerializeField] float verticalRotationClamp = 85f;
-    [SerializeField] private float cameraElevation = 1f;
     [SerializeField] private Transform target;
+
+    [SerializeField] private float verticalMinClamp = -30f;
+    [SerializeField] private float verticalMaxClamp = 45f;
 
     private float _inputVerticalRotation = 0f;
     private float _cameraVerticalRotation = 0f;
@@ -18,28 +18,32 @@ public class CameraControl : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         transform.position = cameraOffset;
-        transform.eulerAngles = new Vector3(cameraInitialRotation, 0f);
-        Debug.Log($"{name}: Euler angles {transform.rotation.eulerAngles}");
+        transform.LookAt(GetCameraTargetPosition());
         _cameraVerticalRotation = transform.rotation.eulerAngles.x;
-        _targetDistance = Vector3.Distance(transform.position, GetTargetElevatedPosition());
+        _targetDistance = Vector3.Distance(transform.position, GetCameraTargetPosition());
     }
 
     private void Update()
     {
-        MoveCameraOnInput();
+        // If we have vertical input, then move the camera
+        if(_inputVerticalRotation != 0f)
+            MoveCameraOnInput();
     }
 
     private void MoveCameraOnInput()
     {
-        // First rotate
-        _cameraVerticalRotation -= _inputVerticalRotation;
-        _cameraVerticalRotation = Mathf.Clamp(_cameraVerticalRotation, -verticalRotationClamp, verticalRotationClamp);
+        // Smooth input multiplying by sensitivity and deltaTime
+        var smoothedVerticalInput = _inputVerticalRotation * cameraVerticalSensitivity * Time.deltaTime;
+
+        // Rotate the camera
+        _cameraVerticalRotation -= smoothedVerticalInput;
+        _cameraVerticalRotation = Mathf.Clamp(_cameraVerticalRotation, verticalMinClamp, verticalMaxClamp);
         Vector3 targetRotation = transform.eulerAngles;
         targetRotation.x = _cameraVerticalRotation;
         transform.eulerAngles = targetRotation;
 
-        // Then move
-        transform.position = GetTargetElevatedPosition() - (transform.forward * _targetDistance);
+        // Then rotate the position along the Z axis
+        transform.position = GetCameraTargetPosition() - (transform.forward * _targetDistance);
     }
 
     public float GetCameraHorizontalSensitivity()
@@ -49,11 +53,11 @@ public class CameraControl : MonoBehaviour
 
     public void SetVerticalRotation(float input)
     {
-        _inputVerticalRotation = input * cameraVerticalSensitivity * Time.deltaTime;
+        _inputVerticalRotation = input;
     }
 
-    private Vector3 GetTargetElevatedPosition()
+    private Vector3 GetCameraTargetPosition()
     {
-        return target.position + new Vector3(0, cameraElevation);
+        return target.position;
     }
 }
