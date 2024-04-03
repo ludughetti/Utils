@@ -84,14 +84,7 @@ public class CharacterBody : MonoBehaviour
     {
         //transform.Rotate(Vector3.up, _horizontalRotation * Time.fixedDeltaTime);
 
-        /*if (_isBrakeRequested)
-        {
-            _rigidbody.AddTorque(-_rigidbody.velocity * brakeMultiplier, ForceMode.Impulse);
-            _isBrakeRequested = false;
-            Debug.Log($"{name}: Brake!");
-        }*/
-
         Debug.Log($"{name}: Torque rotation is {Vector3.up * _horizontalRotation * Time.fixedDeltaTime}");
-        _rigidbody.AddTorque(Vector3.up * _horizontalRotation * Time.fixedDeltaTime, ForceMode.Impulse);
+        _rigidbody.AddTorque(Vector3.up * _horizontalRotation * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 }
