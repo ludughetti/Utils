@@ -236,7 +236,7 @@ MonoBehaviour:
   camera: {fileID: 770228949}
   inputReader: {fileID: 1319565885}
   speed: 10
-  acceleration: 15
+  acceleration: 20
 --- !u!114 &633237677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,6 +255,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   dragAmount: 5
+  horizontalRotation: 10
 --- !u!136 &633237678
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -291,7 +292,7 @@ GameObject:
   - component: {fileID: 671874243}
   - component: {fileID: 671874242}
   m_Layer: 3
-  m_Name: Plane
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -535,9 +536,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraOffset: {x: 0, y: 2.25, z: -2.5}
-  cameraHorizontalSensitivity: 40
-  cameraVerticalSensitivity: 10
+  cameraSensitivity: 0.2
   target: {fileID: 1332831559}
+  characterBody: {fileID: 633237677}
   verticalMinClamp: -30
   verticalMaxClamp: 45
 --- !u!1001 &853501099

@@ -45,7 +45,7 @@ public class CharacterBrain : MonoBehaviour
 
     private void HandleCameraInput(Vector2 input)
     {
-        body.SetHorizontalRotation(input.x * camera.GetCameraHorizontalSensitivity());
-        camera.SetVerticalRotation(input.y);
+        //body.SetHorizontalRotation(input.x * camera.GetCameraHorizontalSensitivity());
+        camera.SetInputRotation(input);
     }
 }

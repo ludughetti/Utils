@@ -8,12 +8,13 @@ public class CharacterBody : MonoBehaviour
     [SerializeField] private float characterHeight;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float dragAmount;
+    [SerializeField] private float horizontalRotation = 1f;
 
     private Rigidbody _rigidbody;
     private MovementRequest _currentMovement = MovementRequest.InvalidRequest;
     private bool _isBrakeRequested = false;
     private bool _isGrounded;
-    private float _horizontalRotation = 0f;
+    private Vector3 _cameraForward = Vector3.zero;
 
     private void Awake()
     {
@@ -24,7 +25,7 @@ public class CharacterBody : MonoBehaviour
     private void Update()
     {
         _isGrounded = Physics.Raycast(transform.position, Vector3.down, characterHeight * 0.5f + 0.2f, groundLayer);
-        Debug.Log($"{name}: _isGrounded {_isGrounded}");
+        //Debug.Log($"{name}: _isGrounded {_isGrounded}");
 
         if (_isGrounded)
         {
@@ -54,7 +55,7 @@ public class CharacterBody : MonoBehaviour
 
     public void SetHorizontalRotation(float inputRotation)
     {
-        _horizontalRotation = inputRotation;
+        horizontalRotation = inputRotation;
     }
 
     public void RequestBrake()
@@ -84,7 +85,25 @@ public class CharacterBody : MonoBehaviour
     {
         //transform.Rotate(Vector3.up, _horizontalRotation * Time.fixedDeltaTime);
 
-        Debug.Log($"{name}: Torque rotation is {Vector3.up * _horizontalRotation * Time.fixedDeltaTime}");
-        _rigidbody.AddTorque(Vector3.up * _horizontalRotation * Time.fixedDeltaTime, ForceMode.Acceleration);
+        // Debug.Log($"{name}: Torque rotation is {Vector3.up * _horizontalRotation * Time.fixedDeltaTime}");
+        // _rigidbody.AddTorque(Vector3.up * _horizontalRotation * Time.fixedDeltaTime, ForceMode.Acceleration);
+
+        if (Vector3.zero.Equals(_cameraForward))
+            return;
+
+        /*Quaternion rotationQuaternion = Quaternion.LookRotation(_cameraForward);
+        Debug.Log($"{name}: rotationQuaternion is {rotationQuaternion}");
+        _rigidbody.MoveRotation(rotationQuaternion);*/
+        Vector3 horizontalDirection = Vector3.ProjectOnPlane(_cameraForward, Vector3.up);
+        Quaternion rotation = Quaternion.LookRotation(horizontalDirection);
+        Quaternion bodyRotation = Quaternion.Slerp(_rigidbody.rotation, rotation, horizontalRotation);
+        _rigidbody.MoveRotation(bodyRotation);
+    }
+
+    public void SetCameraForward(Vector3 cameraForward)
+    {
+        Debug.Log($"{name}: cameraForward is {cameraForward}");
+        // Body will only rotate horizontally (on Y axis)
+        _cameraForward = cameraForward;
     }
 }
