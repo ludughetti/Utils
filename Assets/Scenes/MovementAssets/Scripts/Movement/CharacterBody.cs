@@ -1,45 +1,50 @@
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 /* This class interfaces with rigidBody to control a character's movement through forces */
 [RequireComponent (typeof(Rigidbody))]
 public class CharacterBody : MonoBehaviour
 {
-    [SerializeField] private float brakeMultiplier;
-    [SerializeField] private float characterHeight;
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private float dragAmount;
-    [SerializeField] private float horizontalRotation = 1f;
+    [SerializeField] private CameraControl cameraControl;
+    [SerializeField] private float brakeMultiplier = 0.75f;
+    [SerializeField] private float characterHeight = 1.8f;
+    [SerializeField] private float dragAmount = 3.5f;
+    [SerializeField] private Vector3 groundedOffset = new(0, 0.001f, 0);
 
     private Rigidbody _rigidbody;
     private MovementRequest _currentMovement = MovementRequest.InvalidRequest;
     private bool _isBrakeRequested = false;
     private bool _isGrounded;
-    private Vector3 _cameraForward = Vector3.zero;
+    private float _horizontalRotation = 0f;
+    private Vector3 _rotationSpeed = Vector3.zero;
 
-    private void Awake()
+    private void Start()
     {
+        if (!AreAllComponentsAssigned())
+            enabled = false;
+
         _rigidbody = GetComponent<Rigidbody>();
         _isGrounded = Physics.Raycast(transform.position, Vector3.down, characterHeight * 0.5f + 0.2f, groundLayer);
+        _rotationSpeed = new(0f, cameraControl.GetCameraSensitivity(), 0f);
     }
 
     private void Update()
     {
-        _isGrounded = Physics.Raycast(transform.position, Vector3.down, characterHeight * 0.5f + 0.2f, groundLayer);
-        //Debug.Log($"{name}: _isGrounded {_isGrounded}");
+        // Check if target is on the ground
+        _isGrounded = Physics.Raycast(transform.position + groundedOffset, 
+            Vector3.down, characterHeight * 0.5f + 0.2f, groundLayer);
 
+        // Adjust drag depending on if character is grounded or not
         if (_isGrounded)
-        {
             _rigidbody.drag = dragAmount;
-        }
         else
-        {
             _rigidbody.drag = 0f;
-        }
     }
 
     private void FixedUpdate()
     {
-        RotateCharacter();
+        RotateBody();
         MoveCharacter();
     }
 
@@ -55,12 +60,30 @@ public class CharacterBody : MonoBehaviour
 
     public void SetHorizontalRotation(float inputRotation)
     {
-        horizontalRotation = inputRotation;
+        _horizontalRotation = inputRotation;
     }
 
     public void RequestBrake()
     {
         _isBrakeRequested = true;
+    }
+
+    // Check if all dependencies are properly set in the UI
+    private bool AreAllComponentsAssigned()
+    {
+        if (groundLayer == 0)
+        {
+            Debug.Log($"{name}: Ground layer is not assigned");
+            return false;
+        }
+
+        if (!cameraControl)
+        {
+            Debug.Log($"{name}: Camera control is not assigned");
+            return false;
+        }
+
+        return true;
     }
 
     private void MoveCharacter()
@@ -78,32 +101,14 @@ public class CharacterBody : MonoBehaviour
         /* Multiply input.x by transform.right to move on x axis and input.y by transform.forward to move on z axis */
         Vector3 directionVector = (_currentMovement.Direction.x * transform.right + _currentMovement.Direction.z * transform.forward) * _currentMovement.Acceleration;
         directionVector.y = 0f;
+        Debug.Log($"{name}: directionVector is {directionVector}");
         _rigidbody.AddForce(directionVector, ForceMode.Force);
     }
 
-    private void RotateCharacter()
+    private void RotateBody()
     {
-        //transform.Rotate(Vector3.up, _horizontalRotation * Time.fixedDeltaTime);
-
-        // Debug.Log($"{name}: Torque rotation is {Vector3.up * _horizontalRotation * Time.fixedDeltaTime}");
-        // _rigidbody.AddTorque(Vector3.up * _horizontalRotation * Time.fixedDeltaTime, ForceMode.Acceleration);
-
-        if (Vector3.zero.Equals(_cameraForward))
-            return;
-
-        /*Quaternion rotationQuaternion = Quaternion.LookRotation(_cameraForward);
-        Debug.Log($"{name}: rotationQuaternion is {rotationQuaternion}");
-        _rigidbody.MoveRotation(rotationQuaternion);*/
-        Vector3 horizontalDirection = Vector3.ProjectOnPlane(_cameraForward, Vector3.up);
-        Quaternion rotation = Quaternion.LookRotation(horizontalDirection);
-        Quaternion bodyRotation = Quaternion.Slerp(_rigidbody.rotation, rotation, horizontalRotation);
-        _rigidbody.MoveRotation(bodyRotation);
-    }
-
-    public void SetCameraForward(Vector3 cameraForward)
-    {
-        Debug.Log($"{name}: cameraForward is {cameraForward}");
-        // Body will only rotate horizontally (on Y axis)
-        _cameraForward = cameraForward;
+        // Rotate the rigidbody depending on mouse horizontal input
+        Quaternion deltaRotation = Quaternion.Euler(_horizontalRotation * Time.fixedDeltaTime * _rotationSpeed);
+        _rigidbody.MoveRotation(_rigidbody.rotation * deltaRotation);
     }
 }

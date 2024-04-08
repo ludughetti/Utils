@@ -2,75 +2,98 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    [SerializeField] private Vector3 cameraOffset = new(0, 3.5f, -5f);
-    [SerializeField] private float cameraSensitivity = 10f;
+    [SerializeField] private Vector3 cameraOffset = new(0, 2.25f, -2.5f);
     [SerializeField] private Transform target;
-    [SerializeField] private CharacterBody characterBody;
 
+    [SerializeField] private float cameraSensitivity = 10f;
     [SerializeField] private float verticalMinClamp = -30f;
     [SerializeField] private float verticalMaxClamp = 45f;
 
-    private Vector2 _inputRotation = Vector2.zero;
-    private Vector2 _rawInputRotation = Vector2.zero;
+    private float _inputRotation = 0f;
     private float _targetDistance = 0f;
     private float _rotX = 0f;
 
     private void Start()
     {
+        if (!AreAllComponentsAssigned())
+        {
+            enabled = false;
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
 
         // Offset camera for third person view
         transform.position = cameraOffset;
-        transform.LookAt(target.position);
+        if(Vector3.zero.Equals(cameraOffset))
+            transform.LookAt(target.position);
 
         // Calculate distance between positions for camera rotation and repositioning
         _targetDistance = Vector3.Distance(transform.position, target.position);
     }
 
-    private void FixedUpdate()
+    // We update the camera on LateUpdate to allow for all physics calculations to happen beforehand
+    private void LateUpdate()
     {
-        RotateCameraOnBodyRotation();
         MoveCamera();
     }
 
-    private void RotateCameraOnBodyRotation()
+    // Check if all dependencies are properly set in the UI
+    private bool AreAllComponentsAssigned()
     {
-        // If we don't have input, then skip rotation calculations
-        if (Vector2.zero.Equals(_rawInputRotation))
-            return;
+        if (!target)
+        {
+            Debug.Log($"{name}: Camera target is not assigned");
+            return false;
+        }
 
-        // Rotate the camera
-        transform.eulerAngles = new Vector3(-_inputRotation.x, transform.eulerAngles.y + _inputRotation.y, 0f);
-
-        // Set body._cameraForward to rotate the body according to the camera rotation
-        characterBody.SetCameraForward(transform.forward);
+        return true;
     }
 
     private void MoveCamera()
     {
+        // If we don't have input, then skip camera calculations
+        if (_inputRotation == 0f)
+            return;
+
+        // Smooth input rotation
+        SmoothRotation();
+
+        // Rotate camera on input
+        RotateCamera();
+
         // Reposition camera to follow the target
         transform.position = target.position - (transform.forward * _targetDistance);
     }
 
-    public float GetCameraHorizontalSensitivity()
+    public float GetCameraSensitivity()
     {
         return cameraSensitivity;
     }
 
-    public void SetInputRotation(Vector2 input)
+    public void SetInputRotation(float yInput)
     {
-        _rawInputRotation = input;
+        _inputRotation = yInput;
+    }
 
-        if (Vector2.zero.Equals(_rawInputRotation))
-            return;
+    private void SmoothRotation()
+    {
+        // We use only input.y as X since vertical rotation (input.y) happens on the X axis
+        _rotX += _inputRotation * cameraSensitivity * Time.deltaTime;
 
-        // We invert them since horizontal rotation (input.x) happens on the Y axis, while vertical rotation (input.y) happens on the X axis
-        float y = input.x * cameraSensitivity;
-        _rotX += input.y * cameraSensitivity;
-
-        // Clamp vertical rotation so the camera doesn't go through the floor or above max character rotation possibilities 
+        // Clamp rotation so the camera doesn't go through the floor or above max character rotation possibilities 
         _rotX = Mathf.Clamp(_rotX, verticalMinClamp, verticalMaxClamp);
 
-        _inputRotation = new Vector2(_rotX, y);
+        // Invert mouse input
+        _inputRotation = -_rotX;
+    }
+
+    private void RotateCamera()
+    {
+        // Get current camera angle and replace vertical rotation for the one we calculated
+        Vector3 targetRotation = transform.eulerAngles;
+        targetRotation.x = _inputRotation;
+
+        // Update camera rotation
+        transform.eulerAngles = targetRotation;
     }
 }

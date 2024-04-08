@@ -155,7 +155,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 298137665}
   rigidbody: {fileID: 633237671}
-  speedParameter: hor_speed
+  horizontalMovSpeedParam: move_speed
+  directionXParam: dir_x
+  directionZParam: dir_z
 --- !u!1 &633237670
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,7 +188,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 10
+  m_AngularDrag: 8
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -216,6 +218,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 770228947}
   - {fileID: 1332831559}
   - {fileID: 298137664}
   m_Father: {fileID: 0}
@@ -234,8 +237,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   body: {fileID: 633237677}
   camera: {fileID: 770228949}
+  view: {fileID: 298137666}
   inputReader: {fileID: 1319565885}
-  speed: 10
+  speed: 12
   acceleration: 20
 --- !u!114 &633237677
 MonoBehaviour:
@@ -249,13 +253,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73a1e05db5aef624ba5823159fce5826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brakeMultiplier: 0.75
-  characterHeight: 1.8
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  dragAmount: 5
-  horizontalRotation: 10
+  cameraControl: {fileID: 770228949}
+  brakeMultiplier: 0.75
+  characterHeight: 1.8
+  dragAmount: 3.5
+  groundedOffset: {x: 0, y: 0.001, z: 0}
 --- !u!136 &633237678
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -477,7 +482,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 633237675}
   m_LocalEulerAnglesHint: {x: 7, y: 0, z: 0}
 --- !u!114 &770228948
 MonoBehaviour:
@@ -536,9 +541,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraOffset: {x: 0, y: 2.25, z: -2.5}
-  cameraSensitivity: 0.2
   target: {fileID: 1332831559}
-  characterBody: {fileID: 633237677}
+  cameraSensitivity: 10
   verticalMinClamp: -30
   verticalMaxClamp: 45
 --- !u!1001 &853501099
@@ -924,7 +928,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1278973923}
-  - {fileID: 770228947}
   - {fileID: 633237675}
   - {fileID: 1319565884}
   - {fileID: 671874245}
