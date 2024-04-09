@@ -9,15 +9,16 @@ public class CharacterBrain : MonoBehaviour
     [SerializeField] private InputReader inputReader;
     [SerializeField] private float speed = 10;
     [SerializeField] private float acceleration = 4;
-    
+    [SerializeField] private float reduceAmount = 4;
+
     private float _reducedAcceleration;
     private float _reducedSpeed;
     private Vector3 _desiredDirection = Vector3.zero;
 
     private void Start()
     {
-        _reducedAcceleration = acceleration - (acceleration / 3);
-        _reducedSpeed = speed - (speed / 2);
+        _reducedAcceleration = acceleration - (acceleration / reduceAmount);
+        _reducedSpeed = speed - (speed / reduceAmount);
     }
 
     private void OnEnable()

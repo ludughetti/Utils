@@ -241,6 +241,7 @@ MonoBehaviour:
   inputReader: {fileID: 1319565885}
   speed: 12
   acceleration: 20
+  reduceAmount: 4
 --- !u!114 &633237677
 MonoBehaviour:
   m_ObjectHideFlags: 0

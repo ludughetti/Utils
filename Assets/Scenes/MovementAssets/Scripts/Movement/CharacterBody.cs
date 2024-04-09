@@ -101,7 +101,6 @@ public class CharacterBody : MonoBehaviour
         /* Multiply input.x by transform.right to move on x axis and input.y by transform.forward to move on z axis */
         Vector3 directionVector = (_currentMovement.Direction.x * transform.right + _currentMovement.Direction.z * transform.forward) * _currentMovement.Acceleration;
         directionVector.y = 0f;
-        Debug.Log($"{name}: directionVector is {directionVector}");
         _rigidbody.AddForce(directionVector, ForceMode.Force);
     }
 
