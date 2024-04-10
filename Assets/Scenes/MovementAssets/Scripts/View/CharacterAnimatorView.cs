@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class CharacterAnimatorView : MonoBehaviour
 {
@@ -7,31 +9,70 @@ public class CharacterAnimatorView : MonoBehaviour
     [SerializeField] private string horizontalMovSpeedParam = "move_speed";
     [SerializeField] private string directionXParam = "dir_x";
     [SerializeField] private string directionZParam = "dir_z";
+    [SerializeField] private float animationSpeed = 4f;
 
-    private Vector2 _direction = Vector2.zero;
+    private Vector2 _currentInput = Vector2.zero;
+    private Vector2 _nextDirection = Vector2.zero;
+    private Vector2 _previousDirection = Vector2.zero;
 
     private void Update()
     {
-        SetHorizontalMovementAnimations();
+        SetMovementAnimations();
     }
 
-    private void SetHorizontalMovementAnimations()
+    private void SetMovementAnimations()
     {
-        var velocity = rigidbody.velocity;
-        velocity.y = 0;
+        SmoothMovementValues();
 
-        var speed = velocity.magnitude;
+        animator.SetFloat(directionXParam, _currentInput.x);
+        animator.SetFloat(directionZParam, _currentInput.y);
+    }
 
-        animator.SetFloat(horizontalMovSpeedParam, speed);
-        animator.SetFloat(directionXParam, _direction.x);
-        animator.SetFloat(directionZParam, _direction.y);
+    /*
+     * This method lerps input(X,Y) values between changes to smooth animation transitions.
+     * If a change comes from a negative position (e.g. [-1,0]) to a positive one (e.g. [1,0]), 
+     * then the current position needs to be increased.
+     * However, if a change comes from a positive position (e.g. [1,0]) to a negative one (e.g. [-1,0]), 
+     * then the current position needs to be decreased.
+     * 
+     * _previousDirection will be updated once _currentInput reaches _nextDirection's values 
+     * (AKA the actual input value provided by InputReader).
+     * 
+     * This is calculated both for input.x as well as input.y.
+     */
+    private void SmoothMovementValues()
+    {
+        // Lerp on X
+        if (_nextDirection.x > _previousDirection.x)
+        {
+            _currentInput.x += Time.deltaTime * animationSpeed;
+            if(_currentInput.x >= _nextDirection.x)
+                _previousDirection.x = _nextDirection.x;
+        }
+        else if(_nextDirection.x < _previousDirection.x)
+        {
+            _currentInput.x -= Time.deltaTime * animationSpeed;
+            if (_currentInput.x <= _nextDirection.x)
+                _previousDirection.x = _nextDirection.x;
+        }
+
+        // Lerp on Y
+        if (_nextDirection.y > _previousDirection.y)
+        {
+            _currentInput.y += Time.deltaTime * animationSpeed;
+            if(_currentInput.y >= _nextDirection.y)
+                _previousDirection.y = _nextDirection.y;
+        }
+        else if (_nextDirection.y < _previousDirection.y)
+        {
+            _currentInput.y -= Time.deltaTime * animationSpeed;
+            if (_currentInput.y <= _nextDirection.y)
+                _previousDirection.y = _nextDirection.y;
+        }  
     }
 
     public void SetMovementDirection(Vector2 input)
     {
-        float xValue = Mathf.Clamp(input.x, -1f, 1f);
-        float zValue = Mathf.Clamp(input.y, -1f, 1f);
-        _direction = new(xValue, zValue);
-        Debug.Log($"{name}: _direction is {_direction}");
+        _nextDirection = input;
     }
 }

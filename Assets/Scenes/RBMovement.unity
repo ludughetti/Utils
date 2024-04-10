@@ -158,6 +158,7 @@ MonoBehaviour:
   horizontalMovSpeedParam: move_speed
   directionXParam: dir_x
   directionZParam: dir_z
+  animationSpeed: 4
 --- !u!1 &633237670
 GameObject:
   m_ObjectHideFlags: 0
