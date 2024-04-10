@@ -3,13 +3,18 @@ using UnityEngine;
 /* This class controls a body */
 public class CharacterBrain : MonoBehaviour
 {
-    [SerializeField] private CharacterBody body;
+    [Header("Camera")]
     [SerializeField] new private CameraControl camera;
+
+    [Header("Character")]
+    [SerializeField] private CharacterBody body;
     [SerializeField] private CharacterAnimatorView view;
+    [SerializeField] private float maxMovementSpeed = 10;
+    [SerializeField] private float maxMovementAcceleration = 4;
+    [SerializeField] private float reduceMovementMultiplier = 4;
+
+    [Header("Player Input")]
     [SerializeField] private InputReader inputReader;
-    [SerializeField] private float speed = 10;
-    [SerializeField] private float acceleration = 4;
-    [SerializeField] private float reduceAmount = 4;
 
     private float _reducedAcceleration;
     private float _reducedSpeed;
@@ -17,8 +22,8 @@ public class CharacterBrain : MonoBehaviour
 
     private void Start()
     {
-        _reducedAcceleration = acceleration - (acceleration / reduceAmount);
-        _reducedSpeed = speed - (speed / reduceAmount);
+        _reducedAcceleration = maxMovementAcceleration - (maxMovementAcceleration / reduceMovementMultiplier);
+        _reducedSpeed = maxMovementSpeed - (maxMovementSpeed / reduceMovementMultiplier);
     }
 
     private void OnEnable()
@@ -64,7 +69,7 @@ public class CharacterBrain : MonoBehaviour
     private float getSpeedByDirection(Vector2 input)
     {
         if (input.y > 0f)
-            return speed;
+            return maxMovementSpeed;
 
         return _reducedSpeed;
     }
@@ -73,7 +78,7 @@ public class CharacterBrain : MonoBehaviour
     private float getAccelerationByDirection(Vector2 input)
     {
         if (input.y > 0f)
-            return acceleration;
+            return maxMovementAcceleration;
 
         return _reducedAcceleration;
     }

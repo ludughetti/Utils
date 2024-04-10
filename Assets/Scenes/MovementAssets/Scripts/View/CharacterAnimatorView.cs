@@ -4,12 +4,15 @@ using UnityEngine.Windows;
 
 public class CharacterAnimatorView : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
+    [Header("Target")]
     [SerializeField] new private Rigidbody rigidbody;
-    [SerializeField] private string horizontalMovSpeedParam = "move_speed";
+
+    [Header("Settings")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private float animationSpeed = 4f;
     [SerializeField] private string directionXParam = "dir_x";
     [SerializeField] private string directionZParam = "dir_z";
-    [SerializeField] private float animationSpeed = 4f;
+    [SerializeField] private string horizontalMovSpeedParam = "move_speed";
 
     private Vector2 _currentInput = Vector2.zero;
     private Vector2 _nextDirection = Vector2.zero;

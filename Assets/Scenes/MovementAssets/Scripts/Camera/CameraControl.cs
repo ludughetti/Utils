@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
-    [SerializeField] private Vector3 cameraOffset = new(0, 2.25f, -2.5f);
+    [Header("Target")]
     [SerializeField] private Transform target;
+    [SerializeField] private Vector3 offsetFromTarget = new(0, 2.25f, -2.5f);
+
+    [Header("Settings")]
     [SerializeField] private float cameraSensitivity = 10f;
     [SerializeField] private float verticalMinClamp = -30f;
     [SerializeField] private float verticalMaxClamp = 45f;
@@ -22,8 +25,8 @@ public class CameraControl : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         // Offset camera for third person view
-        transform.position = cameraOffset;
-        if(Vector3.zero.Equals(cameraOffset))
+        transform.position = offsetFromTarget;
+        if(Vector3.zero.Equals(offsetFromTarget))
             transform.LookAt(target.position);
 
         // Calculate distance between positions for camera rotation and repositioning

@@ -5,12 +5,17 @@ using static UnityEngine.GraphicsBuffer;
 [RequireComponent (typeof(Rigidbody))]
 public class CharacterBody : MonoBehaviour
 {
-    [SerializeField] private LayerMask groundLayer;
+    [Header("Camera")]
     [SerializeField] private CameraControl cameraControl;
+
+    [Header("InAir Check")]
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Vector3 groundedOffset = new(0, 0.001f, 0);
+
+    [Header("Movement")]
     [SerializeField] private float brakeMultiplier = 0.75f;
     [SerializeField] private float characterHeight = 1.8f;
     [SerializeField] private float dragAmount = 3.5f;
-    [SerializeField] private Vector3 groundedOffset = new(0, 0.001f, 0);
 
     private Rigidbody _rigidbody;
     private MovementRequest _currentMovement = MovementRequest.InvalidRequest;
