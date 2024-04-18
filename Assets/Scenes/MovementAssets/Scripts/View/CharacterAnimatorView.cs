@@ -12,7 +12,7 @@ public class CharacterAnimatorView : MonoBehaviour
     [SerializeField] private float animationSpeed = 4f;
     [SerializeField] private string directionXParam = "dir_x";
     [SerializeField] private string directionZParam = "dir_z";
-    [SerializeField] private string horizontalMovSpeedParam = "move_speed";
+    //[SerializeField] private string horizontalMovSpeedParam = "move_speed";
 
     private Vector2 _currentInput = Vector2.zero;
     private Vector2 _nextDirection = Vector2.zero;
@@ -45,7 +45,7 @@ public class CharacterAnimatorView : MonoBehaviour
      */
     private void SmoothMovementValues()
     {
-        // Lerp on X
+        // Lerp on X depending in which direction we're moving
         if (_nextDirection.x > _previousDirection.x)
         {
             _currentInput.x += Time.deltaTime * animationSpeed;
@@ -59,7 +59,7 @@ public class CharacterAnimatorView : MonoBehaviour
                 _previousDirection.x = _nextDirection.x;
         }
 
-        // Lerp on Y
+        // Lerp on Y depending in which direction we're moving
         if (_nextDirection.y > _previousDirection.y)
         {
             _currentInput.y += Time.deltaTime * animationSpeed;

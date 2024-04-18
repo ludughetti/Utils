@@ -9,9 +9,11 @@ public class CharacterBrain : MonoBehaviour
     [Header("Character")]
     [SerializeField] private CharacterBody body;
     [SerializeField] private CharacterAnimatorView view;
-    [SerializeField] private float maxMovementSpeed = 10;
-    [SerializeField] private float maxMovementAcceleration = 4;
-    [SerializeField] private float reduceMovementMultiplier = 4;
+
+    [Header("Movement")]
+    [SerializeField] private float maxMovementSpeed = 12f;
+    [SerializeField] private float maxMovementAcceleration = 20f;
+    [SerializeField] private float reduceMovementMultiplier = 4f;
 
     [Header("Player Input")]
     [SerializeField] private InputReader inputReader;
@@ -38,12 +40,14 @@ public class CharacterBrain : MonoBehaviour
 
         inputReader.OnMovementInput += HandleMovementInput;
         inputReader.OnCameraInput += HandleCameraInput;
+        inputReader.OnJumpInput += HandleJumpInput;
     }
 
     private void OnDisable()
     {
         inputReader.OnMovementInput -= HandleMovementInput;
         inputReader.OnCameraInput -= HandleCameraInput;
+        inputReader.OnJumpInput -= HandleJumpInput;
     }
 
     private void HandleMovementInput(Vector2 input)
@@ -55,7 +59,7 @@ public class CharacterBrain : MonoBehaviour
         }
 
         _desiredDirection = new Vector3(input.x, 0f, input.y);
-        body.SetMovement(new MovementRequest(_desiredDirection, getSpeedByDirection(input), getAccelerationByDirection(input)));
+        body.SetMovement(new MovementRequest(_desiredDirection, GetSpeedByDirection(input), GetAccelerationByDirection(input)));
         view.SetMovementDirection(input);
     }
 
@@ -66,7 +70,7 @@ public class CharacterBrain : MonoBehaviour
     }
 
     // If character is moving forward, use full speed. Else, reduced.
-    private float getSpeedByDirection(Vector2 input)
+    private float GetSpeedByDirection(Vector2 input)
     {
         if (input.y > 0f)
             return maxMovementSpeed;
@@ -75,11 +79,16 @@ public class CharacterBrain : MonoBehaviour
     }
 
     // If character is moving forward, use full acceleration. Else, reduced.
-    private float getAccelerationByDirection(Vector2 input)
+    private float GetAccelerationByDirection(Vector2 input)
     {
         if (input.y > 0f)
             return maxMovementAcceleration;
 
         return _reducedAcceleration;
+    }
+
+    private void HandleJumpInput()
+    {
+        body.Jump();
     }
 }

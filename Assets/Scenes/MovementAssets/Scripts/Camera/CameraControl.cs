@@ -4,7 +4,7 @@ public class CameraControl : MonoBehaviour
 {
     [Header("Target")]
     [SerializeField] private Transform target;
-    [SerializeField] private Vector3 offsetFromTarget = new(0, 2.25f, -2.5f);
+    [SerializeField] private Vector3 offsetFromTarget = new(0f, 2.25f, -2.5f);
 
     [Header("Settings")]
     [SerializeField] private float cameraSensitivity = 10f;
