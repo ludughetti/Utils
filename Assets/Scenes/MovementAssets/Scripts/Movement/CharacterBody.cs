@@ -85,9 +85,11 @@ public class CharacterBody : MonoBehaviour
         _isBrakeRequested = true;
     }
 
-    public float GetVelocityNormalized()
+    public float GetHorizontalVelocityNormalized()
     {
-        return _rigidbody.velocity.normalized.magnitude;
+        Vector3 rbHorizontalVelocity = _rigidbody.velocity;
+        rbHorizontalVelocity.y = 0f;
+        return rbHorizontalVelocity.normalized.magnitude;
     }
 
     public bool GetIsGrounded()
@@ -151,7 +153,7 @@ public class CharacterBody : MonoBehaviour
             Debug.Log($"{name}: Jump executed");
         }
     }
-
+     
     // TODO: Maybe it'd be better to have a method running in FixedUpdate to check frame Physics?
     private float GetMovementDragMultiplier()
     {

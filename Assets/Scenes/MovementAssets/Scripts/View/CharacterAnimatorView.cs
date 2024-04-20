@@ -30,7 +30,7 @@ public class CharacterAnimatorView : MonoBehaviour
 
         animator.SetFloat(directionXParam, _currentInput.x);
         animator.SetFloat(directionZParam, _currentInput.y);
-        animator.SetFloat(horizontalMovSpeedParam, body.GetVelocityNormalized());
+        animator.SetFloat(horizontalMovSpeedParam, body.GetHorizontalVelocityNormalized());
         animator.SetBool(jumpParam, !body.GetIsGrounded());
     }
 
@@ -57,12 +57,14 @@ public class CharacterAnimatorView : MonoBehaviour
         if (_nextDirection.x > _previousDirection.x)
         {
             _currentInput.x += Time.deltaTime * animationSpeed;
+            _currentInput.x = Mathf.Clamp(_currentInput.x, _previousDirection.x, _nextDirection.x);
             if(_currentInput.x >= _nextDirection.x)
                 _previousDirection.x = _nextDirection.x;
         }
         else if(_nextDirection.x < _previousDirection.x)
         {
             _currentInput.x -= Time.deltaTime * animationSpeed;
+            _currentInput.x = Mathf.Clamp(_currentInput.x, _nextDirection.x, _previousDirection.x);
             if (_currentInput.x <= _nextDirection.x)
                 _previousDirection.x = _nextDirection.x;
         }
@@ -71,12 +73,14 @@ public class CharacterAnimatorView : MonoBehaviour
         if (_nextDirection.y > _previousDirection.y)
         {
             _currentInput.y += Time.deltaTime * animationSpeed;
+            _currentInput.y = Mathf.Clamp(_currentInput.y, _previousDirection.y, _nextDirection.y);
             if(_currentInput.y >= _nextDirection.y)
                 _previousDirection.y = _nextDirection.y;
         }
         else if (_nextDirection.y < _previousDirection.y)
         {
             _currentInput.y -= Time.deltaTime * animationSpeed;
+            _currentInput.y = Mathf.Clamp(_currentInput.y, _nextDirection.y, _previousDirection.y);
             if (_currentInput.y <= _nextDirection.y)
                 _previousDirection.y = _nextDirection.y;
         }  

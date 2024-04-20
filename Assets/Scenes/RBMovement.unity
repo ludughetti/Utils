@@ -368,7 +368,7 @@ MonoBehaviour:
     m_Bits: 8
   groundedOffset: {x: 0, y: 0.001, z: 0}
   groundCheckDistance: 0.2
-  gravityScale: 3
+  gravityScale: 2
   jumpHeight: 10
   jumpSpeedMultiplier: 0.75
   brakeMultiplier: 0.75
@@ -655,7 +655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 1332831559}
   offsetFromTarget: {x: 0, y: 2.25, z: -2.5}
-  cameraSensitivity: 10
+  cameraSensitivity: 12
   verticalMinClamp: -30
   verticalMaxClamp: 45
 --- !u!1001 &853501099
