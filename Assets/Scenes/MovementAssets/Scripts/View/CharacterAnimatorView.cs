@@ -5,14 +5,15 @@ using UnityEngine.Windows;
 public class CharacterAnimatorView : MonoBehaviour
 {
     [Header("Target")]
-    [SerializeField] new private Rigidbody rigidbody;
+    [SerializeField] private CharacterBody body;
 
     [Header("Settings")]
     [SerializeField] private Animator animator;
     [SerializeField] private float animationSpeed = 4f;
     [SerializeField] private string directionXParam = "dir_x";
     [SerializeField] private string directionZParam = "dir_z";
-    //[SerializeField] private string horizontalMovSpeedParam = "move_speed";
+    [SerializeField] private string horizontalMovSpeedParam = "move_speed";
+    [SerializeField] private string jumpParam = "is_jump";
 
     private Vector2 _currentInput = Vector2.zero;
     private Vector2 _nextDirection = Vector2.zero;
@@ -29,6 +30,13 @@ public class CharacterAnimatorView : MonoBehaviour
 
         animator.SetFloat(directionXParam, _currentInput.x);
         animator.SetFloat(directionZParam, _currentInput.y);
+        animator.SetFloat(horizontalMovSpeedParam, body.GetVelocityNormalized());
+        animator.SetBool(jumpParam, !body.GetIsGrounded());
+    }
+
+    public void SetMovementDirection(Vector2 input)
+    {
+        _nextDirection = input;
     }
 
     /*
@@ -72,10 +80,5 @@ public class CharacterAnimatorView : MonoBehaviour
             if (_currentInput.y <= _nextDirection.y)
                 _previousDirection.y = _nextDirection.y;
         }  
-    }
-
-    public void SetMovementDirection(Vector2 input)
-    {
-        _nextDirection = input;
     }
 }

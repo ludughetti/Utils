@@ -258,11 +258,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2740e113a1910f24eb6123a76bee889e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidbody: {fileID: 633237671}
+  body: {fileID: 633237677}
   animator: {fileID: 298137665}
   animationSpeed: 4
   directionXParam: dir_x
   directionZParam: dir_z
+  horizontalMovSpeedParam: move_speed
+  jumpParam: is_jump
 --- !u!1 &633237670
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,6 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73a1e05db5aef624ba5823159fce5826, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  brain: {fileID: 633237676}
   cameraControl: {fileID: 770228949}
   groundLayer:
     serializedVersion: 2

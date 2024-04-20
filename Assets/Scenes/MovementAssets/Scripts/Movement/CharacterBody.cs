@@ -5,6 +5,9 @@ using static UnityEngine.GraphicsBuffer;
 [RequireComponent (typeof(Rigidbody))]
 public class CharacterBody : MonoBehaviour
 {
+    [Header("Brain")]
+    [SerializeField] private CharacterBrain brain;
+
     [Header("Camera")]
     [SerializeField] private CameraControl cameraControl;
 
@@ -45,9 +48,13 @@ public class CharacterBody : MonoBehaviour
 
         // Adjust drag depending on if character is grounded or not
         if (_isGrounded)
+        {
             _rigidbody.drag = dragAmount;
+        }
         else
+        {
             _rigidbody.drag = 0f;
+        }
 
         RotateBody();
         MoveBody();
@@ -76,6 +83,16 @@ public class CharacterBody : MonoBehaviour
     public void RequestBrake()
     {
         _isBrakeRequested = true;
+    }
+
+    public float GetVelocityNormalized()
+    {
+        return _rigidbody.velocity.normalized.magnitude;
+    }
+
+    public bool GetIsGrounded()
+    {
+        return _isGrounded;
     }
 
     // Check if all dependencies are properly set in the UI
@@ -124,12 +141,11 @@ public class CharacterBody : MonoBehaviour
 
     public void Jump()
     {
-        Debug.Log($"{name}: Jump received");
         if (_isGrounded)
         {
             _isGrounded = false;
+
             Vector3 horizontalVelocity = new(0f, _rigidbody.velocity.magnitude, 0f);
-            Debug.Log($"{name}: horizontalVelocity is {horizontalVelocity}");
             _rigidbody.AddForce(jumpHeight * jumpSpeedMultiplier * Vector3.up + horizontalVelocity, 
                 ForceMode.Impulse);
             Debug.Log($"{name}: Jump executed");
